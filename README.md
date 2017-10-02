@@ -3,7 +3,7 @@
 <p> 
 An integer calculator that computes only integers on Android. </br>
 Target API: <strong>23</strong> </br>
-Minimum API: <strong>18</strong></br>
+Minimum API: <strong>21</strong></br>
 </p>
 
 <p>
