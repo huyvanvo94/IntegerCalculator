@@ -6,7 +6,13 @@ import android.content.SharedPreferences;
 import com.huyvo.cmpe277.integercalculator.model.IntegerCalculator;
 import com.huyvo.cmpe277.integercalculator.model.TokenModel;
 import com.huyvo.cmpe277.integercalculator.util.Logger;
-import static com.huyvo.cmpe277.integercalculator.util.Constants.CalculatorToken.*;
+
+import static com.huyvo.cmpe277.integercalculator.util.Constants.CalculatorToken.ADD_TOKEN;
+import static com.huyvo.cmpe277.integercalculator.util.Constants.CalculatorToken.CLEAR_TOKEN;
+import static com.huyvo.cmpe277.integercalculator.util.Constants.CalculatorToken.DIV_TOKEN;
+import static com.huyvo.cmpe277.integercalculator.util.Constants.CalculatorToken.EQUAL_TOKEN;
+import static com.huyvo.cmpe277.integercalculator.util.Constants.CalculatorToken.MUL_TOKEN;
+import static com.huyvo.cmpe277.integercalculator.util.Constants.CalculatorToken.SUB_TOKEN;
 /**
  * Created by Huy Vo on 9/21/17.
  */
@@ -21,6 +27,8 @@ public class IntegerCalculatorHandler {
     private TokenModel mTokenModelTwo;
     // just Computed = true if user presses =, else set to false
     private boolean    mJustComputed;
+
+    private boolean    mChangedSign;
     // The operator such as +, -, /, *
     private String     mOperator;
     /*
@@ -34,6 +42,7 @@ public class IntegerCalculatorHandler {
         mTokenModelTwo = new TokenModel();
         mOperator      = null;
         mJustComputed  = false;
+        mChangedSign   = false;
     }
 
     /*
@@ -74,6 +83,7 @@ public class IntegerCalculatorHandler {
         editor.putString(context.getString(R.string.token_one), mTokenModelOne.toString());
         editor.putString(context.getString(R.string.token_two), mTokenModelTwo.toString());
         editor.putBoolean(context.getString(R.string.computed), mJustComputed);
+        editor.putBoolean(context.getString(R.string.sign), mChangedSign);
         editor.commit();
     }
     /*
@@ -89,15 +99,16 @@ public class IntegerCalculatorHandler {
         final String tokenTwoValue = sharedPref.getString(context.getString(R.string.token_two), "");
         final String operatorValue = sharedPref.getString(context.getString(R.string.action), null);
         final boolean computed = sharedPref.getBoolean(context.getString(R.string.computed), false);
+        final boolean sign = sharedPref.getBoolean(context.getString(R.string.sign), false);
 
         mTokenModelOne = new TokenModel(tokenOneValue);
         mTokenModelTwo = new TokenModel(tokenTwoValue);
-
-        if(operatorValue != null){
-            mOperator = operatorValue;
-        }
-
+        mChangedSign = sign;
         mJustComputed = computed;
+        mOperator = operatorValue;
+
+
+
         log();
 
         if(!mTokenModelTwo.isEmpty()) {
@@ -122,18 +133,27 @@ public class IntegerCalculatorHandler {
         Logger.d(TAG, "value= " + value);
 
         if(isAction(value)){
+            Logger.d(TAG, "1");
             if(mTokenModelOne.isEmpty()){
                 if(value.equals(ADD_TOKEN) || value.equals(SUB_TOKEN)){
                     mTokenModelOne.setSign(value);
+                    mChangedSign = true;
                 }
               //  return;
-            }else{
+            }else if(mOperator != null){
+                Logger.d(TAG, "2");
+                onOperation();
+
+            }
+            if(!mChangedSign) {
+                Logger.d(TAG, "3");
+
                 mOperator = value;
             }
 
-            if(mOperator != null){
-                onOperation();
-            }
+            mChangedSign = false;
+
+
 
             log();
         }else{
@@ -243,6 +263,7 @@ public class IntegerCalculatorHandler {
         Logger.d(TAG, "onEqual");
         if(mTokenModelOne.isEmpty() || mTokenModelTwo.isEmpty() || mOperator == null){
             Logger.d(TAG, "error");
+            clear();
             mListener.onError();
             return;
         }

@@ -168,6 +168,9 @@ public class IntegerCalculatorFragment extends Fragment implements View.OnClickL
         protected void onPostExecute(String s) {
             TextView textView = (TextView ) view.findViewById(R.id.calc_result);
             textView.setText(getString(R.string._0));
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                textView.setTextSize(getContext().getResources().getDimension(R.dimen.text_size));
+            }
         }
     }
 

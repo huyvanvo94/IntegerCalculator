@@ -25,5 +25,6 @@
     <string name="token_two">token_two</string>
     <string name="action">action</string>
     <string name="computed">computed</string>
+    <string name="sign">sign</string>
     
 </resources>
