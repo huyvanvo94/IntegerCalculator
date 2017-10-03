@@ -8,7 +8,6 @@ Minimum API: <strong>21</strong></br>
 
 <p>
 <strong>A high level view of my application:</strong></br>
-
 In the project, IntegerCalculatorFragment is the view in which it host the 
 xml file that contains the UI view. MainActivity is the controller. When a user 
 clicks on a button, the fragment will configure the view and then send the 
@@ -16,8 +15,8 @@ message to MainActivity. The MainActivity contains the IntegerCalculatorHandler
 that is the logic of the application. It handles the requirement and computes 
 the values and send the message back to the activity. These messages are error, 
 clear, computed value, and overflow. The MainActivity will than update the UI 
-according to the message it recieves from its handler. The observer pattern is 
-used to send messages. 
+according to the message it receives from its handler. The observer pattern is 
+used to send messages. I used AsyncTask for button color changed and messages that disappears. I used shared preferences for saving the state of the calculator when rotation happens.
 
 Here is a diagram of my application: </br>
 
