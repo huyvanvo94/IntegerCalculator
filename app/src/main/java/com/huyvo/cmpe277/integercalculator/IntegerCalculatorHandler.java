@@ -127,12 +127,14 @@ public class IntegerCalculatorHandler {
                     mTokenModelOne.setSign(value);
                 }
               //  return;
+            }else{
+                mOperator = value;
             }
 
             if(mOperator != null){
                 onOperation();
             }
-            mOperator = value;
+
             log();
         }else{
             switch (value){
